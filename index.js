@@ -152,7 +152,89 @@ for (var j = 0; j < indicators.length; j++) {
     updateSlider();});}
 window.addEventListener("resize", updateSlider);
 
+// ? scroll to top
+var scrollToTopBtn = document.getElementById("scroll-to-top");
 
+if (scrollToTopBtn) {
+  window.addEventListener("scroll", function () {
+    if (window.scrollY > 300) {
+      // إظهار الزر بسلاسة عند تجاوز التمرير 300 بكسل
+      scrollToTopBtn.classList.remove("opacity-0");
+      scrollToTopBtn.classList.add("opacity-100");
+    } else {
+      scrollToTopBtn.classList.remove( "opacity-100");
+      scrollToTopBtn.classList.add("opacity-0");
+    }});
+  scrollToTopBtn.addEventListener("click", function () {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });});}
 
+    // ? active link
+var sections = document.querySelectorAll("section");
+var navLinks = document.querySelectorAll("nav a");
 
+window.addEventListener("scroll", function () {
+  var scrollPosition = window.scrollY + 150;
+
+  for (var i = 0; i < sections.length; i++) {
+    var currentSection = sections[i];
+    var sectionHeight = currentSection.offsetHeight;
+    var sectionTop = currentSection.offsetTop;
+    var sectionId = currentSection.getAttribute("id");
+
+    if (
+      scrollPosition >= sectionTop &&
+      scrollPosition < sectionTop + sectionHeight
+    ) {
+      for (var j = 0; j < navLinks.length; j++) {
+        var link = navLinks[j];
+        if (link.getAttribute("href") === "#" + sectionId) {
+          link.classList.remove("text-slate-600", "dark:text-slate-300");
+          link.classList.add("text-primary", "dark:text-primary");
+        } else {
+          link.classList.remove("text-primary", "dark:text-primary");
+          link.classList.add("text-slate-600", "dark:text-slate-300");
+        }
+      }
+    }
+  }
+});  
+
+// ?navs and taps
+var filterButtons = document.querySelectorAll(".portfolio-filter");
+var portfolioItems = document.querySelectorAll(".portfolio-item");
+
+  for (var i = 0; i < filterButtons.length; i++) {
+    filterButtons[i].addEventListener("click", function () {
+      for (var j = 0; j < filterButtons.length; j++) {
+        filterButtons[j].classList.remove("active", "bg-linear-to-r", "from-primary", "to-secondary", "text-white", "hover:shadow-lg", "hover:shadow-primary/50");
+        filterButtons[j].setAttribute("aria-pressed", "false");
+        filterButtons[j].classList.add("bg-white", "dark:bg-slate-800", "text-slate-600", "dark:text-slate-300", "hover:bg-slate-100", "dark:hover:bg-slate-700", "border", "border-slate-300", "dark:border-slate-700");
+      }
+      this.classList.remove("bg-white", "dark:bg-slate-800", "text-slate-600", "dark:text-slate-300", "hover:bg-slate-100", "dark:hover:bg-slate-700", "border", "border-slate-300", "dark:border-slate-700");
+      this.classList.add("active", "bg-linear-to-r", "from-primary", "to-secondary", "text-white", "hover:shadow-lg", "hover:shadow-primary/50");
+      this.setAttribute("aria-pressed", "true");
+
+      var selectedFilter = this.getAttribute("data-filter");
+      for (var k = 0; k < portfolioItems.length; k++) {
+        var item = portfolioItems[k];
+        var itemCategory = item.getAttribute("data-category"); 
+        if (selectedFilter === "all" || selectedFilter === itemCategory) {
+          item.classList.remove("hidden");
+          (function(currentCard) {
+            setTimeout(function() {
+              currentCard.style.opacity = "1";
+              currentCard.style.transform = "scale(1)";
+            }, 10);
+          })(item);
+        } else {
+          item.style.opacity = "0";
+          item.style.transform = "scale(0.95)";
+          item.classList.add("hidden");
+        }
+      }
+    });
+  }
 
